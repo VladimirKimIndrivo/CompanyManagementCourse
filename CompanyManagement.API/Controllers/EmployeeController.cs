@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CompanyManagement.Contracts.Models;
+using CompanyManagement.Contracts.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyManagement.API.Controllers
 {
@@ -6,16 +8,25 @@ namespace CompanyManagement.API.Controllers
     [Route("api/employees")]
     public class EmployeeController : ControllerBase
     {
-        [HttpGet("test")]
+        private readonly IEmployeeRepository _repository;
+
+        public EmployeeController(IEmployeeRepository repository)
+        {
+            _repository = repository;
+        }
+
+        [HttpGet("")]
         public ActionResult GetEmployees()
         {   
             return Empty;
         }
 
-        [HttpPost("addEmployee")]
-        public ActionResult AddEmployee([FromBody] int x, [FromBody] int y)
-        {           
-            return Empty;
+        [HttpPost("")]
+        public async Task<ActionResult> AddEmployee([FromBody] EmployeeModel emplyee)
+        {                       
+            await _repository.AddEmployee(emplyee);
+
+            return Ok();
         }
     }
 }
